@@ -36,6 +36,20 @@
         th {
             background-color: #f7f7f7;
         }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f7f7f7;
+            color: #333;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #eaeaea;
+        }
+    
     </style>
 </head>
 <body>
@@ -45,9 +59,9 @@ include 'connect.php';
 
 session_start();
 
-$userid = $_SESSION['userid'];
+$userid = $_SESSION['UserID'];
 
-$sql = "SELECT q.QuestionText, a.AnswerText
+$sql = "SELECT q.QuestionID, q.QuestionText, a.AnswerID, a.AnswerText
         FROM tblquestion q
         JOIN answers a ON q.QuestionID = a.QuestionID
         WHERE a.UserID = ?";
@@ -67,15 +81,18 @@ if (!$result) {
         <tr>
             <th>Question</th>
             <th>Answer</th>
+            <th>Action</th>
         </tr>
         <?php while($row = $result->fetch_assoc()) { ?>
             <tr>
                 <td><?= $row["QuestionText"] ?></td>
                 <td><?= $row["AnswerText"] ?></td>
+                <td><a href="update-answer.php?question_id=<?= $row["QuestionID"] ?>&answer_id=<?= $row["AnswerID"] ?>" class="btn">Update</a></td>
             </tr>
         <?php } ?>
     </table>
 </div>
+<a href="profile-page.php" class="btn">Back</a>
 
 </body>
 </html>

@@ -95,7 +95,7 @@ if (isset($_POST['updatePassword'])) {
     $newPassword = mysqli_real_escape_string($connection, $_POST['newPassword']);
     $confirmPassword = mysqli_real_escape_string($connection, $_POST['confirmPassword']);
 
-    $userid = $_SESSION['userid'];
+    $userid = $_SESSION['UserID']; // Change 'userid' to 'UserID'
     $sql = "SELECT password FROM tbluseraccount WHERE acctid = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param('i', $userid);
@@ -134,7 +134,7 @@ $sql = "SELECT up.firstname, up.lastname, up.gender, up.birthdate, ua.emailadd, 
         JOIN tbluseraccount ua ON up.userid = ua.acctid
         WHERE up.userid = ?";
 $stmt = $connection->prepare($sql);
-$stmt->bind_param('i', $_SESSION['userid']);
+$stmt->bind_param('i', $_SESSION['UserID']); 
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -144,6 +144,7 @@ if (!$result) {
 ?>
 
 <div class="container">
+    <head><link rel="stylesheet" href="css/message-box.css"></head>
     <h1>User Profile</h1>
     <table>
         <tr>
@@ -167,11 +168,12 @@ if (!$result) {
     </table>
 
     <h2>Update Password</h2>
-    <?php if (!empty($message)) { ?>
-        <script>
-            showMessage("<?php echo $message; ?>");
-        </script>
-    <?php } ?>
+
+    <div class="message-box <?php echo ($message != "") ? 'active' : ''; ?>">
+                    <span class="close-btn" onclick="this.parentElement.classList.remove('active');">&times;</span>
+                    <?php echo $message; ?>
+                </div>
+
     <form action="profile-settings.php" method="post">
         <label for="currentPassword">Current Password:</label>
         <input type="password" id="currentPassword" name="currentPassword" required><br>
@@ -189,6 +191,7 @@ if (!$result) {
 </div>
 
 </body>
+
 </html>
 
 <?php
